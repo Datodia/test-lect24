@@ -6,6 +6,7 @@ import { AuthGuard } from './auth.guard';
 import { User } from 'src/users/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { PostsController } from 'src/posts/posts.controller';
+import { VerifyEmailDto } from './dto/verifyemil.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,17 @@ export class AuthController {
   @Post('sign-up')
   signUp(@Body() signUpDto: SignUpDto){
     return this.authService.signUp(signUpDto)
+  }
+
+  @Post('verify-email')
+  verifyEmail(@Body() {email, otpCode}:VerifyEmailDto ){
+
+    return this.authService.verifyEmail(email, otpCode)
+  }
+
+  @Post('resend-verify-code')
+  resendVerifyCode(@Body() body){
+    return this.authService.resendVerifyCode(body.email)
   }
 
 

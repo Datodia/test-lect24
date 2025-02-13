@@ -20,6 +20,15 @@ export class User {
     @Prop({type: [mongoose.Schema.Types.ObjectId], ref: 'Post', default: []})
     posts: mongoose.Schema.Types.ObjectId[]
 
+    @Prop({type: String})
+    otpCode: string
+
+    @Prop({type: Date})
+    validateOtpCodeDate: Date
+
+    @Prop({type: Boolean, default: false})
+    isVerified: boolean
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

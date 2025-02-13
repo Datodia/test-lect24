@@ -4,6 +4,9 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from 'src/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from 'src/users/schema/user.schema';
+import { EmailSenderModule } from 'src/email-sender/email-sender.module';
 
 @Module({
   imports: [
@@ -12,7 +15,9 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       secret: process.env.JWT_SECRET,
     }),
-    UsersModule
+    MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
+    UsersModule,
+    EmailSenderModule
   ],
   controllers: [AuthController],
   providers: [AuthService],
