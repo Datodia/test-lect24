@@ -18,6 +18,21 @@ export class AuthService {
     ){}
 
 
+    async singInWithGoogle(user){
+        let existUser = await this.userModel.findOne({email: user.email})
+        if(!existUser) existUser = await this.userModel.create(user)
+
+        const payLoad = {
+            userId: existUser._id,
+            role: existUser.role
+        }
+    
+        const accessToken = await this.jwtService.sign(payLoad, {expiresIn: '1h'})
+        return accessToken
+
+    }
+
+
     async signUp(signUpDto: SignUpDto){
         const existUser = await this.userModel.findOne({email: signUpDto.email})
         if(existUser) throw new BadRequestException('User already exists')
@@ -84,7 +99,9 @@ export class AuthService {
         const existUser = await this.userModel.findOne({email: signInDto.email}).select('password')
         if(!existUser) throw new BadRequestException('Email is incorect')
 
+        if(!existUser.password) throw new BadRequestException('User Has no password')
         const isPassEqual = await bcript.compare(signInDto.password, existUser.password)
+        
         if(!isPassEqual) throw new BadRequestException('Password is incorect')
 
         if(!existUser.isVerified) throw new BadRequestException('verify email')

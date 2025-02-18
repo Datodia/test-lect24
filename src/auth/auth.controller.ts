@@ -1,12 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { User } from 'src/users/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { PostsController } from 'src/posts/posts.controller';
 import { VerifyEmailDto } from './dto/verifyemil.dto';
+import { GoogleAuthGuard } from './guards/google-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +26,17 @@ export class AuthController {
   @Post('sign-up')
   signUp(@Body() signUpDto: SignUpDto){
     return this.authService.signUp(signUpDto)
+  }
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  async auth(){}
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthRedirect(@Req() req, @Res() res){
+    const token = await this.authService.singInWithGoogle(req.user)
+    res.redirect(`${process.env.FRONT_URL}/sign-in?token=${token}`)
   }
 
   @Post('verify-email')

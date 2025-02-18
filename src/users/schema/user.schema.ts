@@ -29,6 +29,9 @@ export class User {
     @Prop({type: Boolean, default: false})
     isVerified: boolean
 
+    @Prop({type: String})
+    avatar: string
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

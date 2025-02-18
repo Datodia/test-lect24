@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } fro
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { User } from './user.decorator';
-import { IsAdmind } from 'src/auth/isAdmin.guard';
+import { IsAdmind } from 'src/auth/guards/isAdmin.guard';
 import { IsValidObjectId } from './dto/isValidObjectId.dto';
 
 @Controller('users')
